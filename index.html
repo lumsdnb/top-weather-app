@@ -6,7 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The Weather</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="./script.js"></script>
+    <script src="./script.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <input id="city-input" type="text" placeholder="enter city" />
+    <button onclick="getWeatherForecast()">get forecast</button>
+    <!-- <button onclick="getWeatherForecast('darmstadt')">
+      get weather forecast
+    </button> -->
+    <img id="weather-icon" class="--hidden" alt="weather icon" />
+    <span id="weather-condition"></span>
+    <div class="flex-row">
+      <span id="temp-today"></span>
+      <div class="flex-col">
+        <span>💧<span id="humidity-today"></span></span>
+        <span>🌬️<span id="wind-today"></span></span>
+      </div>
+    </div>
+  </body>
 </html>
