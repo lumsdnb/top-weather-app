@@ -5,6 +5,8 @@
 
 	import * as importedJSON from './testresult.json'
 	let cityInput;
+	let country
+	let useNormalUnits = true
 	// 	const cityInput = document.getElementById('city-input');
 	// cityInput.addEventListener('keyup', (e) => {
 	//   city = cityInput.value;
@@ -15,8 +17,10 @@
 
 	//just for testing
 	// let fetchResult=importedJSON
+	// let selectedForecast = importedJSON.current
+	let selectedForecast
 	let fetchResult=''
-		let country
+
 
 	async function getWeatherForecast() {
 	  const ENDPOINT = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${cityInput}&days=7&aqi=no&alerts=no`;
@@ -26,7 +30,8 @@
 		  .then((data) => {
 			fetchResult = data;
 			fetchResult.location.country=='United States of America'?country='USA':fetchResult.location.country
-		  });
+			selectedForecast= fetchResult.current
+		});
 	  } catch (err) {
 		  alert('location not found');
 		  fetchResult=''
@@ -35,6 +40,11 @@
 
 	const resetFetchResults=()=>{
 		fetchResult=''
+	}
+
+	const changeCurrentlySelected=(selectedDay)=>{
+		// selectedForecast=fetchResult.forecast.forecastday[selectedDay].day
+		// console.log(fetchResult.forecast.forecastday[selectedDay].day);
 	}
 	</script>
 
@@ -53,22 +63,23 @@
 		<div class="flex-row">
 			<span class="city-name">{`${fetchResult.location.name}, ${country}`}</span>
 			 <button class="hamburger-icon" on:click={resetFetchResults}>|||</button>
-		</div>
+			<input type="checkbox" bind:checked={useNormalUnits}>
+			</div>
 		<div class="flex-col center-flex">
-			<img id="weather-icon" src={fetchResult.current.condition.icon} alt="weather icon" />
-				<span id="weather-condition">{fetchResult.current.condition.text}</span>
+			<img id="weather-icon" src={selectedForecast.condition.icon} alt="weather icon" />
+				<span id="weather-condition">{selectedForecast.condition.text}</span>
 		</div>
 			<div class="flex-row today-details">
-			<span id="temp-today">{fetchResult.current.temp_c}</span>
-			<div class="flex-col">
-				<span>💧<span id="humidity-today">{fetchResult.current.humidity}</span></span>
-				<span>🌬️<span id="wind-today">{fetchResult.current.wind_kph}</span></span>
+			<span id="temp-today">{useNormalUnits?selectedForecast.temp_c+'°':selectedForecast.temp_f+'℉'}</span>
+			<div class="flex-col center-flex">
+				<span>💧<span id="humidity-today">{selectedForecast.humidity} %</span></span>
+				<span>🌬️<span id="wind-today">{useNormalUnits?selectedForecast.wind_kph+'km/h':selectedForecast.wind_mph+'m/h'}</span></span>
 			</div>
 			</div>
 	</div>
 	<div class="flex-row forecast-list" transition:fade>
-		{#each fetchResult.forecast.forecastday as forecast }
-			<ForecastItem data={forecast}/>
+		{#each fetchResult.forecast.forecastday as forecast, i }
+			<ForecastItem {useNormalUnits} data={forecast} on:click={()=>changeCurrentlySelected(i)}/>
 		{/each}
 	</div>
 

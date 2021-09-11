@@ -1,5 +1,6 @@
 <script>
     export let data
+    export let useNormalUnits
     let weekNames=[
 "Monday",
 "Tuesday",
@@ -12,12 +13,11 @@
 let date = weekNames[new Date(data.date).getDay()]
 </script>
 
-<button class="forecast-day flex-col">
+<button class="forecast-day flex-col" on:click>
     <span>{date}</span>
     <img src={data.day.condition.icon} alt="">
-    <span>{data.day.avgtemp_c}</span>
+    <span>{useNormalUnits?data.day.avgtemp_c+'°':data.day.avgtemp_f+'℉'}</span>
 </button>
-
 
 <style>
     .forecast-day{
